@@ -12,7 +12,7 @@ function required(key: string): string {
 export const env = {
   PORT: required("PORT"),
   MONGODB_URI: required("MONGODB_URI"),
-  FRONTEND_URI: required("FRONTEND_URI"),
+  // FRONTEND_URI: required("FRONTEND_URI"),
   TOKEN_SECRET: required("TOKEN_SECRET"),
   BCRYPT_SECRET: required("BCRYPT_SECRET"),
 };
