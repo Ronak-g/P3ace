@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import { authMiddleware, type userdata } from "../Middleware/AuthMiddleware.ts";
 import { env } from "../config/env.ts";
 import type { Request, Response } from "express";
-import { RefreshTokenPayload, AccessTokenPayload } from "../services/Jwt.Services.ts";
+import { RefreshTokenPayload } from "../services/Jwt.Services.ts";
 
 // make a service to eliminate code that is repeated (later)...
 const router = Router();
@@ -15,10 +15,10 @@ router.post("/refresh", async (req, res) => {
     const token = req.cookies.refreshToken || undefined;
     if (!token) return res.status(400).send(`no token found`);
     const refreshPayload = RefreshTokenPayload(token);
-    const {name} = refreshPayload;
+    const { name } = refreshPayload;
 
     const user = await User.findOne({ name });
-    if(user == null) return res.status(401).send(`You are not authenticated`)
+    if (user == null) return res.status(401).send(`You are not authenticated`);
 
     if (token !== user?.refreshToken)
       return res.status(400).send(`this token is wrong`);
@@ -30,8 +30,8 @@ router.post("/refresh", async (req, res) => {
 
     const options = {
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
+      secure: env.NODE_ENV === "production",
+      sameSite: env.NODE_ENV === "production" ? "none" : "lax",
     } as const;
 
     return res
@@ -62,7 +62,8 @@ router.post("/register", async (req, res) => {
     }
 
     const email_Lower = email.toLowerCase();
-    if (!(email_Lower.includes("@") && email_Lower.includes("."))) return res.status(400).send("email is invalid")
+    if (!(email_Lower.includes("@") && email_Lower.includes(".")))
+      return res.status(400).send("email is invalid");
 
     if (password.length < 8)
       return res.status(400).send(`passwords needs be 8 char or more`);
@@ -80,9 +81,9 @@ router.post("/register", async (req, res) => {
 
     const options = {
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
-    }as const;
+      secure: env.NODE_ENV === "production",
+      sameSite: env.NODE_ENV === "production" ? "none" : "lax",
+    } as const;
 
     return res
       .status(201)
@@ -136,16 +137,19 @@ router.post("/login", async (req, res) => {
     await user.updateOne({ $set: { refreshToken: refreshToken } });
 
     const updatedUser = await User.findOne({ name });
-    if(!updatedUser) throw new Error(`something went while fetching upadtes user in file auth routes`)
-    const dbtoken =  updatedUser.refreshToken;
+    if (!updatedUser)
+      throw new Error(
+        `something went while fetching upadtes user in file auth routes`,
+      );
+    const dbtoken = updatedUser.refreshToken;
     console.log(refreshToken);
     console.log();
     console.log(refreshToken === dbtoken);
 
     const options = {
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
+      secure: env.NODE_ENV === "production",
+      sameSite: env.NODE_ENV === "production" ? "none" : "lax",
     } as const;
 
     return res
@@ -168,17 +172,17 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.post("/logout", authMiddleware, async (req:Request, res:Response) => {
+router.post("/logout", authMiddleware, async (req: Request, res: Response) => {
   try {
     const { name } = req.user as userdata; // though auth middleware we will place user data in this
     const user = await User.findOne({ name });
-    if (!user) return res.status(401).send(`not authenticated`)
+    if (!user) return res.status(401).send(`not authenticated`);
     await user.updateOne({ $set: { refreshToken: undefined } });
 
     const options = {
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
+      secure: env.NODE_ENV === "production",
+      sameSite: env.NODE_ENV === "production" ? "none" : "lax",
     } as const;
 
     res
