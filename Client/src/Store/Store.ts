@@ -1,8 +1,15 @@
 import {create} from "zustand";
 
-const useStore = create(() => ({
-  UImode : 'light',
-})
-)
+interface StoreState {
+  UImode: 'light' | 'dark';
+  toggleUImode: () => void;
+}
+
+const useStore = create<StoreState>()((set) => ({
+  UImode: 'light',
+  toggleUImode: () => set((state) => ({
+    UImode: state.UImode === 'light' ? 'dark' : 'light'
+  })),
+}));
 
 export default useStore;
