@@ -8,7 +8,7 @@ import { RefreshTokenPayload } from "../services/Jwt.Services.ts";
 
 // make a service to eliminate code that is repeated (later)...
 const router = Router();
-//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiUm9uYWsgIiwiaWF0IjoxNzg4NTEzODYwLCJleHAiOjE3ODk4MDk4NjB9._G4T2sXnahndVXcNWoy5OF1Nz86Vw_flKR2x4y-o2PU
+
 router.post("/refresh", async (req, res) => {
   //agar access token fat gaya h to...
   try {
@@ -141,10 +141,10 @@ router.post("/login", async (req, res) => {
       throw new Error(
         `something went while fetching upadtes user in file auth routes`,
       );
-    const dbtoken = updatedUser.refreshToken;
-    console.log(refreshToken);
-    console.log();
-    console.log(refreshToken === dbtoken);
+    // const dbtoken = updatedUser.refreshToken;
+    // console.log(refreshToken);
+    // console.log();
+    // console.log(refreshToken === dbtoken);
 
     const options = {
       httpOnly: true,

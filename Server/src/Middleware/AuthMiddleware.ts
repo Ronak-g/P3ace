@@ -1,6 +1,5 @@
-import jwt from "jsonwebtoken";
-import { env } from "../config/env.ts";
 import type { NextFunction, Request, Response } from "express";
+import { AccessTokenPayload } from "../services/Jwt.Services.ts";
 
 export type userdata = {
   _id: string;
@@ -31,7 +30,7 @@ export function authMiddleware(
   }
 
   try {
-    const decoded = jwt.verify(token, env.TOKEN_SECRET) as userdata;
+    const decoded = AccessTokenPayload(token);
     console.log(decoded)
     req.user = decoded;
     next();
