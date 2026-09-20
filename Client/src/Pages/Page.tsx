@@ -15,6 +15,7 @@ export default function Page() {
       <h1 className="text-5xl font-bold text-white"> Dashboard </h1>{" "}
       <button className=" bg-white rounded px-8 py-2" onClick={() => navigate('/')}>Landing</button>
       <button className=" bg-white rounded px-8 py-2" onClick={() => logout()}>Log Out</button>
+      <button className=" bg-white rounded px-8 py-2" onClick={() => navigate('/tasks')}>tasks</button>
 
     </main>
   );

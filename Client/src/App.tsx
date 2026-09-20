@@ -3,6 +3,7 @@ import Landing from "./Pages/Landing.tsx";
 import Login from "./Pages/Login.tsx";
 import Page from "./Pages/Page.tsx";
 import Register from "./Pages/Register.tsx";
+import TasksPage from "./Pages/Tasks.tsx";
 
 export default function App() {
   return (
@@ -13,7 +14,7 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/page" element={<Page />} />
           <Route path="/register" element={<Register />} />
-
+          <Route path="/tasks" element={<TasksPage />} />
         </Routes>
       </BrowserRouter>
     </>
