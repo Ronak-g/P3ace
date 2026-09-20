@@ -1,17 +1,35 @@
 import mongoose from "mongoose";
 
-interface Task{
-    userId : string;
+export interface ITask{
+    userId : mongoose.Types.ObjectId;
     title : string;
-    time : number;
     importance : "low" | "medium" | "high";
     date : Date;
-    status : "pending" | "Completed"
+    status : "pending" | "completed"
 
 }
 
-const TaskSchema = new mongoose.Schema({
+const TaskSchema = new mongoose.Schema<ITask>({
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
+    title: {
+        type: String,
+        required: true,
+    },
+    importance: {
+        type : String,
+        enum: ["low", "medium", "high"],
+        default : "medium",
+    },
+    date : Date,
+    status : {
+        type : String,
+        enum: ["pending", "completed"],
+        default : "pending",
+    }
+},{timestamps: true});
 
-});
-
-export default mongoose.model("Task", TaskSchema)
+export default mongoose.model<ITask>("Task", TaskSchema);

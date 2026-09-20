@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import { generateAccessAndRefreshTokens } from "../services/Jwt.Services.ts";
 
 
-interface User {
+interface IUser {
   name: string;
   email: string;
   password: string;
@@ -15,7 +15,7 @@ interface User {
   }>;
 }
 
-const userSchema = new mongoose.Schema<User>(
+const userSchema = new mongoose.Schema<IUser>(
   {
     name: {
       type: String,
@@ -54,4 +54,4 @@ userSchema.methods.generateAccessAndRefreshTokens = async function(){
 
 
 
-export default mongoose.model<User>("User", userSchema);
+export default mongoose.model<IUser>("User", userSchema);

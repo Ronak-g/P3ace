@@ -15,7 +15,9 @@ declare global{
   }
 }
 
-
+export interface AuthenticatedRequest extends Request{
+  user: userdata;
+}
 
 
 export function authMiddleware(

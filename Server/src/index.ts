@@ -6,6 +6,8 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 
 import authRoutes from './routes/Auth.routes.ts'
+import taskRoutes from './routes/task.routes.ts'
+import { authMiddleware } from "./Middleware/AuthMiddleware.ts";
 
 const port = env.PORT || 3000;
 const app: Express = express();
@@ -28,3 +30,4 @@ app.use(cookieParser());
 app.use(express.json());
 
 app.use('/auth', authRoutes)
+app.use('/task',authMiddleware, taskRoutes )
