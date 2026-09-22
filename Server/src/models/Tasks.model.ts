@@ -4,7 +4,7 @@ export interface ITask{
     userId : mongoose.Types.ObjectId;
     title : string;
     importance : "low" | "medium" | "high";
-    date : Date;
+    date? : Date;
     status : "pending" | "completed"
 
 }

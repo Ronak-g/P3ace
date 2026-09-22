@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 
 import authRoutes from './routes/Auth.routes.ts'
 import taskRoutes from './routes/task.routes.ts'
+import aiRoutes from './routes/ai.routes.ts'
 import { authMiddleware } from "./Middleware/AuthMiddleware.ts";
 
 const port = env.PORT || 3000;
@@ -30,4 +31,5 @@ app.use(cookieParser());
 app.use(express.json());
 
 app.use('/auth', authRoutes)
-app.use('/task',authMiddleware, taskRoutes )
+app.use('/task', authMiddleware, taskRoutes)
+app.use('/ai', authMiddleware, aiRoutes)

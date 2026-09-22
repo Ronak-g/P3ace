@@ -1,11 +1,17 @@
 import type { AuthenticatedRequest } from "../Middleware/AuthMiddleware.ts";
-import Task from "../models/Tasks.model.ts";
 import type { Response } from "express";
+import {
+  createTaskHelper,
+  deleteTaskHelper,
+  getTaskByIdHelper,
+  getTasksHelper,
+  patchTaskHelper,
+} from "../services/Task.Services.ts";
 
 export const getTasks = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const userId = req.user._id;
-    const tasks = await Task.find({ userId });
+    const tasks = await getTasksHelper(userId);
     return res.status(200).json(tasks);
   } catch (error) {
     console.error("getTasks error:", error);
@@ -21,12 +27,7 @@ export const createTask = async (req: AuthenticatedRequest, res: Response) => {
       return res.status(400).json({ message: "Title is required" });
     }
 
-    const task = await Task.create({
-      title,
-      importance,
-      date,
-      userId,
-    });
+    const task = await createTaskHelper(title, importance, date, userId);
 
     return res.status(201).json(task);
   } catch (error) {
@@ -38,11 +39,9 @@ export const createTask = async (req: AuthenticatedRequest, res: Response) => {
 export const patchTask = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const userId = req.user._id;
-    const task = await Task.findOneAndUpdate(
-      { _id: req.params.id, userId: userId },
-      req.body,
-      { new: true },
-    );
+    const body = req.body;
+    const id = req.params.id as string;
+    const task = await patchTaskHelper(userId, id, body);
     if (!task) return res.status(404).json({ message: "Task not found" });
 
     return res.status(200).json({ task });
@@ -55,7 +54,8 @@ export const patchTask = async (req: AuthenticatedRequest, res: Response) => {
 export const deleteTask = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const userId = req.user._id;
-    const task = await Task.findOneAndDelete({ _id: req.params.id, userId });
+    const id = req.params.id as string;
+    const task = await deleteTaskHelper(id, userId);
     if (!task) return res.status(404).json({ message: "Task not found" });
     return res.status(200).json({ message: `Successfully deleted task` });
   } catch (error) {
@@ -67,7 +67,8 @@ export const deleteTask = async (req: AuthenticatedRequest, res: Response) => {
 export const getTaskById = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const userId = req.user._id;
-    const task = await Task.findOne({ _id: req.params.id, userId });
+    const id = req.params.id as string;
+    const task = await getTaskByIdHelper(id, userId);
     if (!task) return res.status(404).json({ message: "Task not found" });
     return res.status(200).send(task);
   } catch (error) {
