@@ -16,4 +16,5 @@ export const env = {
   FRONTEND_URI: required("FRONTEND_URI"),
   TOKEN_SECRET: required("TOKEN_SECRET"),
   BCRYPT_SECRET: required("BCRYPT_SECRET"),
+  GEMINI_API: required("GEMINI_API")
 };
