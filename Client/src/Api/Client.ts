@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { type AxiosRequestConfig } from "axios";
 
 const Client = axios.create({
   baseURL: import.meta.env.VITE_BACKEND_URL,
@@ -7,25 +7,59 @@ const Client = axios.create({
 
 // this thing actally intercepts error and makes them readable by only giving info thats req like status and msg
 
+type RetryConfig = AxiosRequestConfig & { _retry?: boolean };
+
+let isRefreshing = false;
+let pendingQueue: { resolve: () => void; reject: (err: unknown) => void }[] = [];
+
 Client.interceptors.response.use(
   (response) => response,
 
   (error) => {
-    if (axios.isAxiosError(error)) {
-      const status = error.response?.status;
-      const message =
-        error.response?.data?.message ||
-        error.response?.data ||
-        "Something went wrong";
+    if (!axios.isAxiosError(error)) return Promise.reject(error);
 
-      return Promise.reject({
-        status,
-        message,
+    const originalRequest = error.config as RetryConfig;
+
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      if (!isRefreshing) {
+        isRefreshing = true;
+        axios
+          .post(
+            `${import.meta.env.VITE_BACKEND_URL}/auth/refresh`,
+            {},
+            { withCredentials: true },
+          )
+          .then(() => {
+            isRefreshing = false;
+            pendingQueue.forEach((p) => p.resolve());
+            pendingQueue = [];
+          })
+          .catch((refreshError) => {
+            isRefreshing = false;
+            pendingQueue.forEach((p) => p.reject(refreshError));
+            pendingQueue = [];
+            window.location.href = "/login";
+          });
+      }
+
+      return new Promise((resolve, reject) => {
+        pendingQueue.push({
+          resolve: () => Client(originalRequest).then(resolve, reject),
+          reject,
+        });
       });
     }
 
-    return Promise.reject(error);
-  }
+    const status = error.response?.status;
+    const message =
+      (error.response?.data as { message?: string })?.message ||
+      error.response?.data ||
+      "Something went wrong";
+
+    return Promise.reject({ status, message });
+  },
 );
 
 export default Client;

@@ -1,28 +1,29 @@
-import React, { useState, useEffect } from "react";
+// import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { refreshSession } from "../Api/authApi";
+// import { refreshSession } from "../Api/authApi";
+import Loginbutton from "../Components/LoginButton";
 
 const Landing: React.FC = () => {
-  const [authenticated, setAuthenticated] = useState(false);
+  // const [authenticated, setAuthenticated] = useState(false);
   const navigate = useNavigate();
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        await refreshSession();
-        setAuthenticated(true);
-      } catch (error) {
-        console.log(error);
-        setAuthenticated(false);
-      }
-    };
-    checkAuth();
-  }, []);
+  // useEffect(() => {
+  //   const checkAuth = async () => {
+  //     try {
+  //       await refreshSession();
+  //       setAuthenticated(true);
+  //     } catch (error) {
+  //       console.log(error);
+  //       setAuthenticated(false);
+  //     }
+  //   };
+  //   checkAuth();
+  // }, []);
 
-  useEffect(() => {
-    if (authenticated) {
-      navigate("/page");
-    }
-  }, [authenticated, navigate]);
+  // useEffect(() => {
+  //   if (authenticated) {
+  //     navigate("/page");
+  //   }
+  // }, [authenticated, navigate]);
 
   return (
     <div className="min-h-screen bg-[#0b0f14] text-[#f1f3f5] font-[IBM_Plex_Sans,sans-serif] flex flex-col">
@@ -37,13 +38,7 @@ const Landing: React.FC = () => {
         </button>
 
         <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={() => navigate("/login")}
-            className="rounded-lg px-4 py-2.5 text-sm font-medium text-gray-300 transition hover:bg-white/[0.05] hover:text-white"
-          >
-            Log in
-          </button>
+          <Loginbutton />
 
           <button
             type="button"

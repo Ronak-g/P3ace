@@ -16,6 +16,7 @@ export default function Page() {
       <button className=" bg-white rounded px-8 py-2" onClick={() => navigate('/')}>Landing</button>
       <button className=" bg-white rounded px-8 py-2" onClick={() => logout()}>Log Out</button>
       <button className=" bg-white rounded px-8 py-2" onClick={() => navigate('/tasks')}>tasks</button>
+      <button className=" bg-white rounded px-8 py-2" onClick={() => navigate('/ai')}>ai</button>
 
     </main>
   );
