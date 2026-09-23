@@ -1,22 +1,5 @@
 import mongoose from "mongoose";
 
-<<<<<<< HEAD
-interface Task{
-    userId : string;
-    title : string;
-    time : number;
-    importance : "low" | "medium" | "high";
-    date : Date;
-    status : "pending" | "Completed"
-
-}
-
-const TaskSchema = new mongoose.Schema({
-
-});
-
-export default mongoose.model("Task", TaskSchema)
-=======
 export interface ITask{
     userId : mongoose.Types.ObjectId;
     title : string;
@@ -50,4 +33,3 @@ const TaskSchema = new mongoose.Schema<ITask>({
 },{timestamps: true});
 
 export default mongoose.model<ITask>("Task", TaskSchema);
->>>>>>> feat/Task_crud
